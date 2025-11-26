@@ -36,7 +36,7 @@ def solve_third_order_newton(a, b, c, d, x0, err):
         error = abs(x1 - x0)
         if (error > prev_error):
             x1 = np.nan
-            
+
     return x1
 
 def solve_second_order_newton(a, b, c, x0, err):
@@ -80,5 +80,23 @@ def solve_second_order_pos(a, b, c):
     
     return unknown
 
+def solve_second_order_neg(a, b, c):
+    discriminant = b ** 2 - 4 * a * c
+    unknown = np.nan
+
+    if (discriminant > 0):
+        unknown = (-b - math.sqrt(discriminant)) / (2 * a)
+
+        if (unknown < 0):
+            unknown = np.nan
+
+    elif (discriminant == 0):
+        unknown = - (b / (2 * a))
+        if (unknown < 0):
+            unknown = np.nan
+    else:
+        unknown = np.nan
+    
+    return unknown
 
 

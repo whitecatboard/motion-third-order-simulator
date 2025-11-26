@@ -4,7 +4,7 @@ import numpy as np
 
 from motion_constraint import MotionConstraint
 from curve import Curve, CurvePhase, ContinuousCurvePhase, DiscreteCurvePhase
-from curve_math import solve_third_order_newton, solve_second_order_pos
+from curve_math import solve_third_order_newton, solve_second_order_newton, solve_second_order_pos, solve_second_order_neg
 
 class SCurveFull(Curve):
     def __init__(self, c: MotionConstraint, alpha: float):
@@ -378,19 +378,82 @@ class SCurveFull(Curve):
 
         return True
 
-    def fit(self):
+    def __solve_time_and_motion_constraints(self):
         """
-        Fit the motion constraints to a full s-curve, tuning-down the initial acceleration and velocity if necessary
-        to satisfy the motion constraints.
+        Solve the time and motion constraints for a full s-curve, tuning-down the initial acceleration and velocity
+        if necessary to satisfy the time and motion constraints.
 
         Returns:
-            boolean: True if the motion constraints have been fitted, False otherwise.
+            boolean: True if the time and motion constraints have been solved, False otherwise.
         """
-        fit_done = False
+
+        # If we have a time constraint, we need to tune-down acceleration and velocity to find an acceleration
+        # and a velocity that satisfy the motion constraints, and mades the motion duration equal to the time
+        # constraint. To do this, we can apply a bisect algorithm on velocity.
+
+        solved = False
+        
+        # Init the tune-down velocity interval
+        min_v = self.c.v0
+        max_v = self.c.v 
+
+        while (abs(max_v - min_v) > 1):
+            # Set a candidate velocity witch is in half of the current interval
+            self.c.update_v(min_v + ((max_v - min_v) / 2))
+
+            # Get a candidate acceleration that corresponds to the candidate velocity
+            a = solve_second_order_newton(
+                self.c.v - self.c.v0,
+                self.c.j * (self.c.s - self.c.v * self.c.t),
+                self.c.j * (self.c.v0 ** 2 - 2 * self.c.v * self.c.v0 + self.c.v ** 2),
+                self.c.a,
+                0.000001)                
+                        
+            if (not np.isnan(a) and (a <= self.c.a) and (a > 0)):
+                # The candidate acceleration and velocity satisfy the acceleration and velocity constraints
+
+                # Check if the candidate acceleration and velocity satisfies the displacement constraints
+                self.c.update_a(a)
+
+                if (super().__check_min_steps__()):
+                    # Acceleration, velocity, and displacement constraints are satisfied
+                    # Update velocity interval
+                    min_v = self.c.v
+                    min_a = a
+                else:   
+                    # Acceleration, velocity, and displacement constraints are not satisfied
+                    # Update velocity interval
+                    max_v = self.c.v
+
+                self.c.restore_a()
+
+            else:
+                # The candidate acceleration and velocity don't satisfy the acceleration and velocity constraints.
+                # Update velocity interval
+                min_v = self.c.v
+
+            self.c.restore_v()
+
+        if (min_v > self.c.v0):
+            self.c.update_a(min_a)
+            self.c.update_v(min_v)
+            solved = True
+
+        return solved
+    
+    def __solve_motion_constraints(self):
+        """
+        Solve the motion constraints to a full s-curve, tuning-down the initial acceleration and velocity
+        if necessary to satisfy the motion constraints.
+
+        Returns:
+            boolean: True if the motion constraints have been solved, False otherwise.
+        """
+        solved = False
 
         if (not super().__check_min_steps__()):
             # As there are not enough space with the current constraints, we need to tune-down acceleration and
-            # velocity to find and acceleration and a velocity that satisfy the constaints. To do this, we can
+            # velocity to find an acceleration and a velocity that satisfy the constaints. To do this, we can
             # apply a bisect algorithm on acceleration.
 
             # Init the tune-down acceleration interval
@@ -430,14 +493,22 @@ class SCurveFull(Curve):
             if (min_a > 0):
                 self.c.update_a(min_a)
                 self.c.update_v(min_v)
-                fit_done = True
+                solved = True
         else:
-            fit_done = True
+            solved = True
+            
+        return solved
+    
+    def solve(self):
+        if (self.c.t > 0):
+            solved = self.__solve_time_and_motion_constraints()
+        else:
+            solved = self.__solve_motion_constraints()
 
-        if fit_done:
+        if solved:
             if self.__bounds():
                 self.__discretize__()
             else:
-                fit_done = False
-            
-        return fit_done
+                solved = False
+
+        return solved

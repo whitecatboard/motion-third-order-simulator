@@ -405,6 +405,57 @@
         </item>
        </widget>
       </widget>
+      <widget class="QCheckBox" name="cbTimeConstraint">
+       <property name="geometry">
+        <rect>
+         <x>330</x>
+         <y>40</y>
+         <width>71</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Time:</string>
+       </property>
+      </widget>
+      <widget class="QSplitter" name="splitter_8">
+       <property name="geometry">
+        <rect>
+         <x>416</x>
+         <y>40</y>
+         <width>164</width>
+         <height>22</height>
+        </rect>
+       </property>
+       <property name="orientation">
+        <enum>Qt::Orientation::Horizontal</enum>
+       </property>
+       <widget class="QLineEdit" name="inputTimeConstraint">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+        <property name="inputMethodHints">
+         <set>Qt::InputMethodHint::ImhNone</set>
+        </property>
+        <property name="inputMask">
+         <string notr="true"/>
+        </property>
+        <property name="text">
+         <string>0</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
+        </property>
+        <property name="clearButtonEnabled">
+         <bool>true</bool>
+        </property>
+       </widget>
+       <widget class="QLabel" name="label_13">
+        <property name="text">
+         <string>s</string>
+        </property>
+       </widget>
+      </widget>
      </widget>
     </item>
    </layout>

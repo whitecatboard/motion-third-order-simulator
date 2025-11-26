@@ -15,9 +15,10 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QApplication, QComboBox, QGridLayout, QLabel,
-    QLineEdit, QMainWindow, QMenuBar, QPushButton,
-    QSizePolicy, QSplitter, QStatusBar, QWidget)
+from PySide6.QtWidgets import (QApplication, QCheckBox, QComboBox, QGridLayout,
+    QLabel, QLineEdit, QMainWindow, QMenuBar,
+    QPushButton, QSizePolicy, QSplitter, QStatusBar,
+    QWidget)
 
 from plotwidget import PlotWidget
 
@@ -171,6 +172,24 @@ class Ui_MainWindow(object):
         self.comboPlot2.setSizePolicy(sizePolicy2)
         self.comboPlot2.setSizeAdjustPolicy(QComboBox.SizeAdjustPolicy.AdjustToContents)
         self.splitter_7.addWidget(self.comboPlot2)
+        self.cbTimeConstraint = QCheckBox(self.widget)
+        self.cbTimeConstraint.setObjectName(u"cbTimeConstraint")
+        self.cbTimeConstraint.setGeometry(QRect(330, 40, 71, 20))
+        self.splitter_8 = QSplitter(self.widget)
+        self.splitter_8.setObjectName(u"splitter_8")
+        self.splitter_8.setGeometry(QRect(416, 40, 164, 22))
+        self.splitter_8.setOrientation(Qt.Orientation.Horizontal)
+        self.inputTimeConstraint = QLineEdit(self.splitter_8)
+        self.inputTimeConstraint.setObjectName(u"inputTimeConstraint")
+        self.inputTimeConstraint.setEnabled(False)
+        self.inputTimeConstraint.setInputMethodHints(Qt.InputMethodHint.ImhNone)
+        self.inputTimeConstraint.setInputMask(u"")
+        self.inputTimeConstraint.setAlignment(Qt.AlignmentFlag.AlignLeading|Qt.AlignmentFlag.AlignLeft|Qt.AlignmentFlag.AlignVCenter)
+        self.inputTimeConstraint.setClearButtonEnabled(True)
+        self.splitter_8.addWidget(self.inputTimeConstraint)
+        self.label_13 = QLabel(self.splitter_8)
+        self.label_13.setObjectName(u"label_13")
+        self.splitter_8.addWidget(self.label_13)
 
         self.gridLayout.addWidget(self.widget, 0, 0, 1, 1)
 
@@ -226,5 +245,8 @@ class Ui_MainWindow(object):
         self.comboPlot2.setItemText(3, QCoreApplication.translate("MainWindow", u"Acceleration", None))
 
         self.comboPlot2.setCurrentText(QCoreApplication.translate("MainWindow", u"Displacement", None))
+        self.cbTimeConstraint.setText(QCoreApplication.translate("MainWindow", u"Time:", None))
+        self.inputTimeConstraint.setText(QCoreApplication.translate("MainWindow", u"0", None))
+        self.label_13.setText(QCoreApplication.translate("MainWindow", u"s", None))
     # retranslateUi
 

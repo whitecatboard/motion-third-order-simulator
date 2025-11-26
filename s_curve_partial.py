@@ -121,7 +121,7 @@ class SCurvePartial(Curve):
         ae = 0
         j = -self.c.j
         vi = phase1.ve
-        ve = vi + (ai ** 2) / self.c.j
+        ve = self.c.v0 + ((self.c.a ** 2) / self.c.j)
         s = s3
 
         si = se
@@ -182,6 +182,7 @@ class SCurvePartial(Curve):
             ai = 0
             ae = 0
             j = 0
+
             vi = ve
             ve = vi
             s = s4
@@ -190,7 +191,7 @@ class SCurvePartial(Curve):
             si = se
             se = si + s
 
-            phase4 = ContinuousCurvePhase(4, t, vi, ve, ai, ae, j, si, se,)
+            phase4 = ContinuousCurvePhase(4, t, vi, ve, ai, ae, j, si, se)
             self.addPhase(phase4)
 
         # Phase characterization (discrete form)
@@ -291,15 +292,56 @@ class SCurvePartial(Curve):
 
         return True
 
-    def fit(self):
+    def __solve_time_and_motion_constraints(self):
         """
-        Fit the motion constraints to a partial s-curve, tuning-down the initial acceleration if necessary
-        to satisfy the motion constraints.
+        Solve the time and motion constraints for a partial s-curve, tuning-down the initial acceleration
+        if necessary to satisfy the time and motion constraints.
 
         Returns:
-            boolean: True if the motion constraints have been fitted, False otherwise.
+            boolean: True if the time and motion constraints have been solved, False otherwise.
         """
-        fit_done = False
+
+        solved = False
+
+        # Get a candidate acceleration that satisfy the time constraint
+        a = solve_third_order_newton(
+            2, 
+            - self.c.t * self.c.j,
+            0,
+            self.c.j ** 2 * (self.c.s - self.c.t * self.c.v0),
+            self.c.a  ,
+            0.000001
+        )
+
+        if ((not np.isnan(a)) and (a < self.c.a) and (a > 0)):
+            # Get a candidate velocity that corresponds to the candidate acceleration
+            v = self.c.v0 + ((a ** 2) / self.c.j)
+    
+            if ((v > self.c.v0) and (v < self.c.v)):
+                # Check if the candidate acceleration and velocity satisfies the displacement constraints
+                self.c.update_a(a)
+                self.c.update_v(v)
+
+                if (super().__check_min_steps__()):
+                    # Displacement constraints are satisfied
+                    solved = True
+                else:   
+                    # Displacement constraints are not satisfied
+                    self.c.restore_a()
+                    self.c.restore_v()
+
+        return solved
+
+    def __solve_motion_constraints(self):
+        """
+        Solve the motion constraints to a partial s-curve, tuning-down the initial acceleration and velocity
+        if necessary to satisfy the motion constraints.
+
+        Returns:
+            boolean: True if the motion constraints have been solved, False otherwise.
+        """
+
+        solved = False
 
         if (not super().__check_min_steps__()):
             # Not enough space for the current constraints. As required space for a partial s-curve
@@ -328,13 +370,25 @@ class SCurvePartial(Curve):
                 self.c.restore_a()
                 self.c.restore_v()                
             else:
-                self.__bounds()
-                fit_done = True
+                solved = True
         else:
             v = self.c.v0 + ((self.c.a**2)/self.c.j)
             self.c.update_v(v)
 
-            self.__bounds()
-            fit_done = True
+            solved = True
 
-        return fit_done
+        return solved
+    
+    def solve(self):
+        if (self.c.t > 0):
+            solved = self.__solve_time_and_motion_constraints()
+        else:
+            solved = self.__solve_motion_constraints()
+
+        if solved:
+            if self.__bounds():
+                self.__discretize__()
+            else:
+                solved = False
+
+        return solved

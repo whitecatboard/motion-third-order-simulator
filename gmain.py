@@ -25,10 +25,17 @@ class Window(QMainWindow, Ui_MainWindow):
         self.inputMaxVelocity.setValidator(QRegularExpressionValidator(QRegularExpression(r'\d+\.\d+|\d+(?![\d.])')))
         self.inputMaxJerk.setValidator(QRegularExpressionValidator(QRegularExpression(r'\d+\.\d+|\d+(?![\d.])')))
         self.inputDisplacement.setValidator(QRegularExpressionValidator(QRegularExpression(r'\d+\.\d+|\d+(?![\d.])')))
+        self.inputTimeConstraint.setValidator(QRegularExpressionValidator(QRegularExpression(r'\d+\.\d+|\d+(?![\d.])')))
 
     def connectSignalsSlots(self):
         self.buttonSimulate.clicked.connect(self.simulate)
+        self.cbTimeConstraint.stateChanged.connect(self.timeConstraintChanged)
 
+    def timeConstraintChanged(self):
+        self.inputTimeConstraint.setEnabled(self.cbTimeConstraint.isChecked())
+        self.inputTimeConstraint.setText("0")
+        self.inputTimeConstraint.setFocus()
+    
     def simulate(self):
         v0 = float(self.inputInitialVelocity.text())
         a = float(self.inputMaxAcceleration.text())
@@ -36,12 +43,17 @@ class Window(QMainWindow, Ui_MainWindow):
         j = float(self.inputMaxJerk.text())
         s = float(self.inputDisplacement.text())
 
+        if (self.cbTimeConstraint.isChecked()):
+            t = float(self.inputTimeConstraint.text())
+        else:
+            t = 0
+
         plot1 = self.comboPlot1.currentIndex()
         plot2 = self.comboPlot2.currentIndex()
 
-        curve = SCurveFull(MotionConstraint(v0, v, a, j, s), 400)
+        curve = SCurveFull(MotionConstraint(v0, v, a, j, s, t), 400)
 
-        if curve.fit():
+        if curve.solve():
             self.plotWidget.canvas.ax[0].clear()
             self.plotWidget.canvas.ax[1].clear()
 
