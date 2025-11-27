@@ -392,6 +392,7 @@ class SCurveFull(Curve):
         # constraint. To do this, we can apply a bisect algorithm on velocity.
 
         solved = False
+        min_a = 0
         
         # Init the tune-down velocity interval
         min_v = self.c.v0
@@ -434,7 +435,7 @@ class SCurveFull(Curve):
 
             self.c.restore_v()
 
-        if (min_v > self.c.v0):
+        if (min_v > self.c.v0) and (min_a > 0):
             self.c.update_a(min_a)
             self.c.update_v(min_v)
             solved = True

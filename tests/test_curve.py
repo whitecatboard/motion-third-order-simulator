@@ -168,7 +168,7 @@ class TestCurve(unittest.TestCase):
         for case in cases:
             constraint = MotionConstraint(case[0], case[1], case[2], case[3], case[4])        
             curve = SCurveFull(constraint, case[5])
-            fit_done = curve.fit()
+            fit_done = curve.solve()
             self.assertEqual(fit_done, case[6], "fit check failed for %d displacement" % (case[4]))
             if (case[6]):
                 self.check_bounds_continuous(curve, constraint)
