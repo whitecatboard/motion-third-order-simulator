@@ -28,7 +28,7 @@ class SCurvePartial(Curve):
 
         return [s1, s3]
     
-    def __bounds(self):
+    def __bounds__(self):
         """
         Compute the bounds for each phase of the partial s-curve. The bounds are computed for the
         continuous and the discrete form of the curve.
@@ -292,7 +292,7 @@ class SCurvePartial(Curve):
 
         return True
 
-    def __solve_time_and_motion_constraints(self):
+    def __solve_time_and_motion_constraints__(self):
         """
         Solve the time and motion constraints for a partial s-curve, tuning-down the initial acceleration
         if necessary to satisfy the time and motion constraints.
@@ -332,7 +332,7 @@ class SCurvePartial(Curve):
 
         return solved
 
-    def __solve_motion_constraints(self):
+    def __solve_motion_constraints__(self):
         """
         Solve the motion constraints to a partial s-curve, tuning-down the initial acceleration and velocity
         if necessary to satisfy the motion constraints.
@@ -376,19 +376,5 @@ class SCurvePartial(Curve):
             self.c.update_v(v)
 
             solved = True
-
-        return solved
-    
-    def solve(self):
-        if (self.c.t > 0):
-            solved = self.__solve_time_and_motion_constraints()
-        else:
-            solved = self.__solve_motion_constraints()
-
-        if solved:
-            if self.__bounds():
-                self.__discretize__()
-            else:
-                solved = False
 
         return solved

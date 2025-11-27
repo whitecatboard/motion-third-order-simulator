@@ -73,7 +73,7 @@ class Curve:
         self.alpha = alpha
         self.beta = 1 / self.alpha
 
-        self.debugBounds = True
+        self.debugBounds = False
         self.debugDiscretize = False
 
     def __get_min_steps__(self):
@@ -171,6 +171,46 @@ class Curve:
         elif isinstance(phase, DiscreteCurvePhase):
             self.discretePhases.append(phase)
 
+    def solve(self):
+        if (self.c.t > 0):
+            solved = self.__solve_time_and_motion_constraints__()
+        else:
+            solved = self.__solve_motion_constraints__()
+
+        if solved:
+            if self.__bounds__():
+                self.__discretize__()
+            else:
+                solved = False
+
+        return solved
+    
+    def getTotalTime(self):
+        t = 0
+
+        for phase in self.phases:
+            t = t + phase.t
+
+        return t
+
+    def getMaxVelocity(self):
+        max_v = 0
+
+        for phase in self.phases:
+            if (phase.ve > max_v):
+                max_v = phase.ve
+
+        return max_v
+
+    def getMaxAcceleration(self):
+        max_a = 0
+
+        for phase in self.phases:
+            if (phase.ae > max_a):
+                max_a = phase.ae
+
+        return max_a
+    
     def continuousDump(self):
         t = 0
         s = 0

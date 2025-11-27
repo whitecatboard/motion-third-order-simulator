@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 sys.path.append("ui")
 
 from PySide6.QtWidgets import QApplication, QMainWindow
+from PySide6 import QtGui
 from PySide6.QtGui import QResizeEvent
 from PySide6.QtGui import QRegularExpressionValidator
 from PySide6.QtCore import QRegularExpression
@@ -19,6 +20,7 @@ class Window(QMainWindow, Ui_MainWindow):
 
         self.setupUi(self)
         self.connectSignalsSlots()
+        self.setWindowIcon(QtGui.QIcon('ui/resources/icon.png'))
 
         self.inputInitialVelocity.setValidator(QRegularExpressionValidator(QRegularExpression(r'\d+\.\d+|\d+(?![\d.])')))
         self.inputMaxAcceleration.setValidator(QRegularExpressionValidator(QRegularExpression(r'\d+\.\d+|\d+(?![\d.])')))
@@ -77,8 +79,17 @@ class Window(QMainWindow, Ui_MainWindow):
             plt.subplots_adjust(hspace = 0.4)
             self.plotWidget.canvas.draw()
 
+            total_time = curve.getTotalTime()
+            self.label_result_total_time.setText("%0.4f s, %0.4f ms" % (total_time, total_time * 1000))
+            self.label_result_max_velocity.setText("%0.4f units/s" % (curve.getMaxVelocity()))
+            self.label_result_max_acceleration.setText("%0.4f uints/s^2" % (curve.getMaxAcceleration()))
+        else:
+            self.label_result_total_time.setText("N/A")
+            self.label_result_max_velocity.setText("N/A")
+            self.label_result_max_acceleration.setText("N/A")
+
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     win = Window()
-    win.show()
+    win.showMaximized()
     sys.exit(app.exec())

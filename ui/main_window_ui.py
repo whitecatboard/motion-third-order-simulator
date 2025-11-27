@@ -15,10 +15,10 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QApplication, QCheckBox, QComboBox, QGridLayout,
-    QLabel, QLineEdit, QMainWindow, QMenuBar,
-    QPushButton, QSizePolicy, QSplitter, QStatusBar,
-    QWidget)
+from PySide6.QtWidgets import (QApplication, QCheckBox, QComboBox, QFrame,
+    QGridLayout, QLabel, QLineEdit, QMainWindow,
+    QMenuBar, QPushButton, QSizePolicy, QSplitter,
+    QStatusBar, QWidget)
 
 from plotwidget import PlotWidget
 
@@ -26,7 +26,8 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
-        MainWindow.resize(1031, 568)
+        MainWindow.setWindowModality(Qt.WindowModality.NonModal)
+        MainWindow.resize(1161, 568)
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
         self.gridLayout = QGridLayout(self.centralwidget)
@@ -190,13 +191,50 @@ class Ui_MainWindow(object):
         self.label_13 = QLabel(self.splitter_8)
         self.label_13.setObjectName(u"label_13")
         self.splitter_8.addWidget(self.label_13)
+        self.line = QFrame(self.widget)
+        self.line.setObjectName(u"line")
+        self.line.setGeometry(QRect(800, 0, 20, 160))
+        sizePolicy3 = QSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
+        sizePolicy3.setHorizontalStretch(0)
+        sizePolicy3.setVerticalStretch(0)
+        sizePolicy3.setHeightForWidth(self.line.sizePolicy().hasHeightForWidth())
+        self.line.setSizePolicy(sizePolicy3)
+        self.line.setFrameShape(QFrame.Shape.VLine)
+        self.line.setFrameShadow(QFrame.Shadow.Sunken)
+        self.label_14 = QLabel(self.widget)
+        self.label_14.setObjectName(u"label_14")
+        self.label_14.setGeometry(QRect(820, 10, 101, 16))
+        self.label_result_total_time = QLabel(self.widget)
+        self.label_result_total_time.setObjectName(u"label_result_total_time")
+        self.label_result_total_time.setGeometry(QRect(920, 10, 200, 16))
+        sizePolicy2.setHeightForWidth(self.label_result_total_time.sizePolicy().hasHeightForWidth())
+        self.label_result_total_time.setSizePolicy(sizePolicy2)
+        self.label_result_max_velocity = QLabel(self.widget)
+        self.label_result_max_velocity.setObjectName(u"label_result_max_velocity")
+        self.label_result_max_velocity.setGeometry(QRect(920, 30, 200, 16))
+        sizePolicy4 = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Preferred)
+        sizePolicy4.setHorizontalStretch(0)
+        sizePolicy4.setVerticalStretch(0)
+        sizePolicy4.setHeightForWidth(self.label_result_max_velocity.sizePolicy().hasHeightForWidth())
+        self.label_result_max_velocity.setSizePolicy(sizePolicy4)
+        self.label_15 = QLabel(self.widget)
+        self.label_15.setObjectName(u"label_15")
+        self.label_15.setGeometry(QRect(820, 30, 101, 16))
+        self.label_16 = QLabel(self.widget)
+        self.label_16.setObjectName(u"label_16")
+        self.label_16.setGeometry(QRect(820, 50, 101, 16))
+        self.label_result_max_acceleration = QLabel(self.widget)
+        self.label_result_max_acceleration.setObjectName(u"label_result_max_acceleration")
+        self.label_result_max_acceleration.setGeometry(QRect(920, 50, 200, 16))
+        sizePolicy4.setHeightForWidth(self.label_result_max_acceleration.sizePolicy().hasHeightForWidth())
+        self.label_result_max_acceleration.setSizePolicy(sizePolicy4)
 
         self.gridLayout.addWidget(self.widget, 0, 0, 1, 1)
 
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QMenuBar(MainWindow)
         self.menubar.setObjectName(u"menubar")
-        self.menubar.setGeometry(QRect(0, 0, 1031, 22))
+        self.menubar.setGeometry(QRect(0, 0, 1161, 22))
         MainWindow.setMenuBar(self.menubar)
         self.statusbar = QStatusBar(MainWindow)
         self.statusbar.setObjectName(u"statusbar")
@@ -213,7 +251,7 @@ class Ui_MainWindow(object):
     # setupUi
 
     def retranslateUi(self, MainWindow):
-        MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"S-Curve Simulator", None))
+        MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"Third order motion simulator", None))
         self.buttonSimulate.setText(QCoreApplication.translate("MainWindow", u"Simulate", None))
         self.label.setText(QCoreApplication.translate("MainWindow", u"Max velocity:", None))
         self.label_7.setText(QCoreApplication.translate("MainWindow", u"Displacement:", None))
@@ -248,5 +286,11 @@ class Ui_MainWindow(object):
         self.cbTimeConstraint.setText(QCoreApplication.translate("MainWindow", u"Time:", None))
         self.inputTimeConstraint.setText(QCoreApplication.translate("MainWindow", u"0", None))
         self.label_13.setText(QCoreApplication.translate("MainWindow", u"s", None))
+        self.label_14.setText(QCoreApplication.translate("MainWindow", u"Total time:", None))
+        self.label_result_total_time.setText(QCoreApplication.translate("MainWindow", u"N/A", None))
+        self.label_result_max_velocity.setText(QCoreApplication.translate("MainWindow", u"N/A", None))
+        self.label_15.setText(QCoreApplication.translate("MainWindow", u"Max velocity:", None))
+        self.label_16.setText(QCoreApplication.translate("MainWindow", u"Max acceleration:", None))
+        self.label_result_max_acceleration.setText(QCoreApplication.translate("MainWindow", u"N/A", None))
     # retranslateUi
 
