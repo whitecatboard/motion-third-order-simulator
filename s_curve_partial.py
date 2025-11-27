@@ -8,6 +8,8 @@ from curve_math import solve_third_order_newton, solve_second_order_pos
 
 class SCurvePartial(Curve):
     def __init__(self, c: MotionConstraint, alpha: float):
+        self.profile = "Partial S-Curve"
+        
         super().__init__(alpha)
 
         self.c = c

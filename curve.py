@@ -73,7 +73,7 @@ class Curve:
         self.alpha = alpha
         self.beta = 1 / self.alpha
 
-        self.debugBounds = False
+        self.debugBounds = True
         self.debugDiscretize = False
 
     def __get_min_steps__(self):
@@ -210,6 +210,9 @@ class Curve:
                 max_a = phase.ae
 
         return max_a
+    
+    def getProfile(self):
+        return self.profile
     
     def continuousDump(self):
         t = 0

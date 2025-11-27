@@ -228,6 +228,14 @@ class Ui_MainWindow(object):
         self.label_result_max_acceleration.setGeometry(QRect(920, 50, 200, 16))
         sizePolicy4.setHeightForWidth(self.label_result_max_acceleration.sizePolicy().hasHeightForWidth())
         self.label_result_max_acceleration.setSizePolicy(sizePolicy4)
+        self.label_17 = QLabel(self.widget)
+        self.label_17.setObjectName(u"label_17")
+        self.label_17.setGeometry(QRect(820, 70, 101, 16))
+        self.label_result_motion_profile = QLabel(self.widget)
+        self.label_result_motion_profile.setObjectName(u"label_result_motion_profile")
+        self.label_result_motion_profile.setGeometry(QRect(920, 70, 200, 16))
+        sizePolicy4.setHeightForWidth(self.label_result_motion_profile.sizePolicy().hasHeightForWidth())
+        self.label_result_motion_profile.setSizePolicy(sizePolicy4)
 
         self.gridLayout.addWidget(self.widget, 0, 0, 1, 1)
 
@@ -292,5 +300,7 @@ class Ui_MainWindow(object):
         self.label_15.setText(QCoreApplication.translate("MainWindow", u"Max velocity:", None))
         self.label_16.setText(QCoreApplication.translate("MainWindow", u"Max acceleration:", None))
         self.label_result_max_acceleration.setText(QCoreApplication.translate("MainWindow", u"N/A", None))
+        self.label_17.setText(QCoreApplication.translate("MainWindow", u"Motion profile:", None))
+        self.label_result_motion_profile.setText(QCoreApplication.translate("MainWindow", u"N/A", None))
     # retranslateUi
 

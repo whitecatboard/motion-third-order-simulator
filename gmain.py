@@ -11,8 +11,7 @@ from PySide6.QtCore import QRegularExpression
 
 from ui.main_window_ui import Ui_MainWindow
 from motion_constraint import MotionConstraint
-from s_curve_partial import SCurvePartial
-from s_curve_full import SCurveFull
+from motion import Motion
 
 class Window(QMainWindow, Ui_MainWindow):
     def __init__(self, parent=None):
@@ -53,40 +52,42 @@ class Window(QMainWindow, Ui_MainWindow):
         plot1 = self.comboPlot1.currentIndex()
         plot2 = self.comboPlot2.currentIndex()
 
-        curve = SCurveFull(MotionConstraint(v0, v, a, j, s, t), 400)
+        motion = Motion(MotionConstraint(v0, v, a, j, s, t), 400)
 
-        if curve.solve():
+        if motion.simulate():
             self.plotWidget.canvas.ax[0].clear()
             self.plotWidget.canvas.ax[1].clear()
 
             if (plot1 > 0):
                 if (plot1 == 1):
-                    curve.plotS(self.plotWidget.canvas.ax[0], "Displacement")
+                    motion.getCurve().plotS(self.plotWidget.canvas.ax[0], "Displacement")
                 elif (plot1 == 2):
-                    curve.plotV(self.plotWidget.canvas.ax[0], "Velocity")
+                    motion.getCurve().plotV(self.plotWidget.canvas.ax[0], "Velocity")
                 elif (plot1 == 3):
-                    curve.plotA(self.plotWidget.canvas.ax[0], "Acceleration")
+                    motion.getCurve().plotA(self.plotWidget.canvas.ax[0], "Acceleration")
 
             if (plot2 > 0):
 
                 if (plot2 == 1):
-                    curve.plotS(self.plotWidget.canvas.ax[1], "Displacement")
+                    motion.getCurve().plotS(self.plotWidget.canvas.ax[1], "Displacement")
                 elif (plot2 == 2):
-                    curve.plotV(self.plotWidget.canvas.ax[1], "Velocity")
+                    motion.getCurve().plotV(self.plotWidget.canvas.ax[1], "Velocity")
                 elif (plot2 == 3):
-                    curve.plotA(self.plotWidget.canvas.ax[1], "Acceleration")
+                    motion.getCurve().plotA(self.plotWidget.canvas.ax[1], "Acceleration")
 
             plt.subplots_adjust(hspace = 0.4)
             self.plotWidget.canvas.draw()
 
-            total_time = curve.getTotalTime()
+            total_time = motion.getCurve().getTotalTime()
             self.label_result_total_time.setText("%0.4f s, %0.4f ms" % (total_time, total_time * 1000))
-            self.label_result_max_velocity.setText("%0.4f units/s" % (curve.getMaxVelocity()))
-            self.label_result_max_acceleration.setText("%0.4f uints/s^2" % (curve.getMaxAcceleration()))
+            self.label_result_max_velocity.setText("%0.4f units/s" % (motion.getCurve().getMaxVelocity()))
+            self.label_result_max_acceleration.setText("%0.4f uints/s^2" % (motion.getCurve().getMaxAcceleration()))
+            self.label_result_motion_profile.setText(motion.getCurve().getProfile())
         else:
             self.label_result_total_time.setText("N/A")
             self.label_result_max_velocity.setText("N/A")
             self.label_result_max_acceleration.setText("N/A")
+            self.label_result_motion_profile.setText("N/A")
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)

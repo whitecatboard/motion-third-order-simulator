@@ -8,6 +8,8 @@ from curve_math import solve_third_order_newton, solve_second_order_newton, solv
 
 class SCurveFull(Curve):
     def __init__(self, c: MotionConstraint, alpha: float):
+        self.profile = "Full S-Curve"
+        
         super().__init__(alpha)
 
         self.c = c

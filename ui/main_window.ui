@@ -574,6 +574,38 @@
         <string>N/A</string>
        </property>
       </widget>
+      <widget class="QLabel" name="label_17">
+       <property name="geometry">
+        <rect>
+         <x>820</x>
+         <y>70</y>
+         <width>101</width>
+         <height>16</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Motion profile:</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_result_motion_profile">
+       <property name="geometry">
+        <rect>
+         <x>920</x>
+         <y>70</y>
+         <width>200</width>
+         <height>16</height>
+        </rect>
+       </property>
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="text">
+        <string>N/A</string>
+       </property>
+      </widget>
      </widget>
     </item>
    </layout>
