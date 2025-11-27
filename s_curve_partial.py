@@ -203,7 +203,7 @@ class SCurvePartial(Curve):
             vid = ved
             ved = vid
             sd = stp * self.beta
-            t = sd / vi
+            t = sd / vid
             td = t
 
             sid = sed
