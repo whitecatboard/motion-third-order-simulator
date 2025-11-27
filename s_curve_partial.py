@@ -200,6 +200,7 @@ class SCurvePartial(Curve):
         if (stp > 0):
             aid = 0
             aed = 0
+            j = 0
             vid = ved
             ved = vid
             sd = stp * self.beta
