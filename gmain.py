@@ -52,6 +52,8 @@ class Window(QMainWindow, Ui_MainWindow):
         plot1 = self.comboPlot1.currentIndex()
         plot2 = self.comboPlot2.currentIndex()
 
+        samplingPoints = self.cbPlotSamplingPoints.isChecked()
+
         motion = Motion(MotionConstraint(v0, v, a, j, s, t), 400)
 
         if motion.simulate():
@@ -60,20 +62,20 @@ class Window(QMainWindow, Ui_MainWindow):
 
             if (plot1 > 0):
                 if (plot1 == 1):
-                    motion.getCurve().plotS(self.plotWidget.canvas.ax[0], "Displacement")
+                    motion.getCurve().plotS(self.plotWidget.canvas.ax[0], "Displacement", samplingPoints)
                 elif (plot1 == 2):
-                    motion.getCurve().plotV(self.plotWidget.canvas.ax[0], "Velocity")
+                    motion.getCurve().plotV(self.plotWidget.canvas.ax[0], "Velocity", samplingPoints)
                 elif (plot1 == 3):
-                    motion.getCurve().plotA(self.plotWidget.canvas.ax[0], "Acceleration")
+                    motion.getCurve().plotA(self.plotWidget.canvas.ax[0], "Acceleration", samplingPoints)
 
             if (plot2 > 0):
 
                 if (plot2 == 1):
-                    motion.getCurve().plotS(self.plotWidget.canvas.ax[1], "Displacement")
+                    motion.getCurve().plotS(self.plotWidget.canvas.ax[1], "Displacement", samplingPoints)
                 elif (plot2 == 2):
-                    motion.getCurve().plotV(self.plotWidget.canvas.ax[1], "Velocity")
+                    motion.getCurve().plotV(self.plotWidget.canvas.ax[1], "Velocity", samplingPoints)
                 elif (plot2 == 3):
-                    motion.getCurve().plotA(self.plotWidget.canvas.ax[1], "Acceleration")
+                    motion.getCurve().plotA(self.plotWidget.canvas.ax[1], "Acceleration", samplingPoints)
 
             plt.subplots_adjust(hspace = 0.4)
             self.plotWidget.canvas.draw()

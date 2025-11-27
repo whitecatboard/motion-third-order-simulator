@@ -252,7 +252,7 @@ class Curve:
         print("---------------------------------------------------------------------------------")
         print("|%10.4f|          |           |           |           | %10.4f| %8d|" % (t, s, stp))
 
-    def plotV(self, ax, title):
+    def plotV(self, ax, title, samplingPoints = False):
         acc_t = 0
         for phase in self.discretePhases:
             x_axis = np.linspace(0, phase.t)
@@ -261,9 +261,25 @@ class Curve:
             ax.title.set_text(title)
             ax.set_xlabel("t", loc = "right")
             ax.set_ylabel("v", loc = "center")
-            acc_t = acc_t + phase.t
+            acc_t = acc_t + phase.t      
 
-    def plotA(self, ax, title):
+        if samplingPoints:
+            t = 0
+            x_axis = [0]
+            y_axis = [self.discretePhases[0].fv(0)]
+
+            for phase in self.discretePhases:  
+                phase_x = np.array(self.deltas[phase.stpi - 1:phase.stpe]).cumsum()
+                phase_y = phase.fv(phase_x)
+                
+                x_axis = x_axis + (phase_x + t).tolist()
+                y_axis = y_axis + phase_y.tolist()
+
+                t = t + phase_x[-1]
+
+            ax.plot(x_axis, y_axis, marker=".",linestyle="")
+
+    def plotA(self, ax, title, samplingPoints = False):
         acc_t = 0
         for phase in self.discretePhases:
             x_axis = np.linspace(0, phase.t)
@@ -274,7 +290,23 @@ class Curve:
             ax.set_ylabel("a", loc = "center")
             acc_t = acc_t + phase.t
 
-    def plotS(self, ax, title):
+        if samplingPoints:
+            t = 0
+            x_axis = [0]
+            y_axis = [self.discretePhases[0].fa(0)]
+
+            for phase in self.discretePhases:  
+                phase_x = np.array(self.deltas[phase.stpi - 1:phase.stpe]).cumsum()
+                phase_y = phase.fa(phase_x)
+                
+                x_axis = x_axis + (phase_x + t).tolist()
+                y_axis = y_axis + phase_y.tolist()
+
+                t = t + phase_x[-1]
+
+            ax.plot(x_axis, y_axis, marker=".",linestyle="")
+
+    def plotS(self, ax, title, samplingPoints = False):
         acc_t = 0
         for phase in self.discretePhases:
             x_axis = np.linspace(0, phase.t)
@@ -285,22 +317,18 @@ class Curve:
             ax.set_ylabel("s", loc = "center")
             acc_t = acc_t + phase.t
 
-        x_axis = []
-        y_axis = []
+        if samplingPoints:
+            t = 0
+            x_axis = [0]
+            y_axis = [self.discretePhases[0].fs(0)]
 
-        t = 0
-        s = 0.0
-        step = 0
+            for phase in self.discretePhases:  
+                phase_x = np.array(self.deltas[phase.stpi - 1:phase.stpe]).cumsum()
+                phase_y = phase.fs(phase_x)
+                
+                x_axis = x_axis + (phase_x + t).tolist()
+                y_axis = y_axis + phase_y.tolist()
 
-        for delta in self.deltas:
-            x_axis.append(t)
-            y_axis.append(s)
+                t = t + phase_x[-1]
 
-            t = t + delta
-            step = step + 1
-            s = self.beta * step
-
-        x_axis.append(t)
-        y_axis.append(s)
-
-        #ax.plot(x_axis, y_axis, marker="o")
+            ax.plot(x_axis, y_axis, marker=".",linestyle="")
