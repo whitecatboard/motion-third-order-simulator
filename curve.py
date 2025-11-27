@@ -229,10 +229,6 @@ class Curve:
         print("-----------------------------------------------------------------------")
         print("|%10.4f|          |           |           |           | %10.4f|" % (t, s))
 
-        #print("")
-        #print("Time        : %f secs, %f msecs" % (t, t * 1000))
-        #print("Displacement: %f units, %d steps" % (s, stp))
-
     def discreteDump(self):
         t = 0
         s = 0
@@ -252,10 +248,6 @@ class Curve:
 
         print("---------------------------------------------------------------------------------")
         print("|%10.4f|          |           |           |           | %10.4f| %8d|" % (t, s, stp))
-
-        #print("")
-        #print("Time        : %f secs, %f msecs" % (t, t * 1000))
-        #print("Displacement: %f units, %d steps" % (s, stp))
 
     def plotV(self, ax, title):
         acc_t = 0
