@@ -162,7 +162,6 @@ class Curve:
             # For each, segment the inverse function of s(t) is defined using a lambda function fsInv(s), which 
             # is used later to discretize the velocity profile.
             if (segment.id == 1) or (segment.id == 3) or (segment.id == 5) or (segment.id == 7):
-                fsInv = lambda s: solve_third_order_newton(j, 3 * ai, 6 * vi, -6 * (s + beta), x0, 10**-9)
                 x0 = self.beta / vi
 
                 def getDelta(s: float) -> float:
@@ -178,8 +177,6 @@ class Curve:
                     return delta
 
             elif (segment.id == 2) or (segment.id == 6):
-                fsInv = lambda s: solve_second_order_pos(0.5 * ai, vi, - (s + beta))
-
                 def getDelta(s: float) -> float:
                     nonlocal t
 
@@ -189,8 +186,6 @@ class Curve:
 
                     return delta
             else:
-                fsInv = lambda s: (s + beta) / vi
-
                 def getDelta(s: float) -> float:
                     return beta / vi
             
