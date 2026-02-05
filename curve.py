@@ -81,7 +81,7 @@ class Curve:
         self.min_segment_steps = 2
         self.solve_error = 0.01
         self.debugBounds = True
-        self.debugDiscretize = True
+        self.debugDiscretize = False
         self.hasSegment4 = False
 
     def __check_min_displacement__(self):

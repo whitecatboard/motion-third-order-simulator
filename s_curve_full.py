@@ -113,8 +113,6 @@ class SCurveFull(Curve):
             s_err = s1_err
             stp_err = math.ceil(s_err * self.alpha)
 
-        print("1: t1_err = %.10f, s1_err: %.10f, t_err = %.10f, s_err: %.10f, stp_err: %d, s1_d = %.10f" % (t1_err, s1_err, t_err, s_err, stp_err, s1_d))
-
         stpi = 1
         stpe = s1_stp
 
@@ -178,8 +176,6 @@ class SCurveFull(Curve):
             t_err = t_err + t2_err
             s_err = s_err + s2_err
             stp_err = math.ceil(s_err * self.alpha)
-
-        print("2: t2_err = %.10f, s2_err: %.10f, t_err = %.10f, s_err: %.10f, stp_err: %d, s2_d = %.10f" % (t2_err, s2_err, t_err, s_err, stp_err, s2_d))
 
         stpi = stpe + 1
         stpe = stpe + s2_stp
@@ -245,8 +241,6 @@ class SCurveFull(Curve):
             s_err = s_err + s3_err
             stp_err = math.ceil(s_err * self.alpha)
        
-        print("3: t3_err = %.10f, s3_err: %.10f, t_err = %.10f, s_err: %.10f, stp_err: %d, s3_d = %.10f" % (t3_err, s3_err, t_err, s_err, stp_err, s3_d))
-
         stpi = stpe + 1
         stpe = stpe + s3_stp
 
@@ -317,8 +311,6 @@ class SCurveFull(Curve):
                 s_err = s_err + s4_err
                 stp_err = math.ceil(s_err * self.alpha)
         
-            print("4: t4_err = %.10f, s4_err: %.10f, t_err = %.10f, s_err: %.10f, stp_err: %d, s4_d = %.10f" % (t4_err, s4_err, t_err, s_err, stp_err, s4_d))
-
             stpi = stpe + 1
             stpe = stpe + s4_stp
 
