@@ -14,21 +14,6 @@ def s_to_steps(s: float, alpha: float, epsilon: float) -> int:
     else:
         return stp - 1
 
-def solve_third_order_newton(f, df, x0, err):
-    x1 = x0 - (f(x0) / df(x0))
-    error = abs(x1 - x0)
-    prev_error = sys.float_info.max
-
-    while (error > err) and (error != prev_error):
-        x0 = x1
-        x1 = x0 - (f(x0) / df(x0))
-        prev_error = error
-        error = abs(x1 - x0)
-        if (error > prev_error):
-            x1 = np.nan
-            
-    return x1
-
 def solve_third_order_newton(a, b, c, d, x0, err):
     it = 1
 
