@@ -1,6 +1,4 @@
 from s_curve_full import SCurveFull
-from s_curve_partial import SCurvePartial
-
 from motion_constraint import MotionConstraint
 
 class Motion:
@@ -9,18 +7,13 @@ class Motion:
         self.alpha = alpha
         self.curve = None
 
-    def simulate(self):
+    def simulate(self, full = True, partial = True):
         solved = False
 
         # First choice: full s-curve
-        self.curve = SCurveFull(self.c, self.alpha)
-        if (not self.curve.solve()):
-            # Second choice: partial s-curve
-            self.curve = SCurvePartial(self.c, self.alpha)
-            if (self.curve.solve()):
-                solved = True
-        else:
-            solved = True
+        if (full):
+            self.curve = SCurveFull(self.c, self.alpha)
+            solved = self.curve.solve()
 
         if not solved:
             self.curve = None

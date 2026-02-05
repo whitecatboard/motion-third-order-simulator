@@ -8,130 +8,157 @@ sys.path.append("ui")
 from motion_constraint import MotionConstraint
 from curve import Curve
 from s_curve_full import SCurveFull
-from s_curve_partial import SCurvePartial
 
 class TestCurve(unittest.TestCase):
     def check_bounds_continuous(self, curve: Curve, constraints: MotionConstraint):
-        # For each phase:
+        # For each segment:
         #
-        # - Check that the entry displacement is almost equal to the exit displacement of the previous phase
-        # - Check that the entry velocity is almost equal to the exit velocity of the previous phase
-        # - Check that the entry acceleration is almost equal to the exit acceleration of the previous phase
+        # - Check that the entry displacement is almost equal to the exit displacement of the previous segment
+        # - Check that the entry velocity is almost equal to the exit velocity of the previous segment
+        # - Check that the entry acceleration is almost equal to the exit acceleration of the previous segment
         #
         # - Check that the entry velocity is less or equal to the max velocity
         # - Check that the entry velocity is greater or equal to the initial velocity
         # - Check that the exit velocity is less or equal to the max velocity
         # - Check that the exit velocity is greater or equal to the initial velocity
-        se = curve.phases[0].si
-        ve = curve.phases[0].vi
-        ae = curve.phases[0].ai
+        se = curve.segments[0].si
+        ve = curve.segments[0].vi
+        ae = curve.segments[0].ai
 
-        for phase in curve.phases:
-            si = phase.si
-            vi = phase.vi
-            ai = phase.ai
+        for segment in curve.segments:
+            si = segment.si
+            vi = segment.vi
+            ai = segment.ai
 
-            self.assertAlmostEqual(si, se, None, "s bound check failded in phase %d" % (phase.id), self.s_epsilon)
-            self.assertAlmostEqual(vi, ve, None, "v bound check failded in phase %d" % (phase.id), self.v_epsilon)
-            self.assertAlmostEqual(ai, ae, None, "a bound check failded in phase %d" % (phase.id), self.a_epsilon)
+            self.assertAlmostEqual(si, se, None, "s bound check failded in segment %d" % (segment.id), self.s_epsilon)
+            self.assertAlmostEqual(vi, ve, None, "v bound check failded in segment %d" % (segment.id), self.v_epsilon)
+            self.assertAlmostEqual(ai, ae, None, "a bound check failded in segment %d" % (segment.id), self.a_epsilon)
 
-            self.assertLessEqual(vi, constraints.v, "vi <= V check failded in phase %d" % (phase.id))
-            self.assertGreaterEqual(vi, constraints.v0, "vi >= v0 check failded in phase %d" % (phase.id))
-            self.assertLessEqual(ve, constraints.v, "ve <= V check failded in phase %d" % (phase.id))
-            self.assertGreaterEqual(ve, constraints.v0, "ve >= v0 check failded in phase %d" % (phase.id))
-            self.assertLessEqual(ai, constraints.a, "ai <= A check failded in phase %d" % (phase.id))
-            self.assertLessEqual(ae, constraints.a, "ae <= A check failded in phase %d" % (phase.id))
+            self.assertLessEqual(vi, constraints.v, "vi <= V check failded in segment %d" % (segment.id))
+            self.assertGreaterEqual(vi, constraints.v0, "vi >= v0 check failded in segment %d" % (segment.id))
+            self.assertLessEqual(ve, constraints.v, "ve <= V check failded in segment %d" % (segment.id))
+            self.assertGreaterEqual(ve, constraints.v0, "ve >= v0 check failded in segment %d" % (segment.id))
+            self.assertLessEqual(ai, constraints.a, "ai <= A check failded in segment %d" % (segment.id))
+            self.assertLessEqual(ae, constraints.a, "ae <= A check failded in segment %d" % (segment.id))
 
-            se = phase.se
-            ve = phase.ve
-            ae = phase.ae
+            se = segment.se
+            ve = segment.ve
+            ae = segment.ae
 
     def check_bounds_discrete(self, curve: Curve, constraints: MotionConstraint):
-        # For each phase:
+        # For each segment:
         #
-        # - Check that the entry displacement is almost equal to the exit displacement of the previous phase
-        # - Check that the entry velocity is almost equal to the exit velocity of the previous phase
-        # - Check that the entry acceleration is almost equal to the exit acceleration of the previous phase
+        # - Check that the entry displacement is almost equal to the exit displacement of the previous segment
+        # - Check that the entry velocity is almost equal to the exit velocity of the previous segment
+        # - Check that the entry acceleration is almost equal to the exit acceleration of the previous segment
         #
         # - Check that the entry velocity is less or equal to the max velocity
         # - Check that the entry velocity is greater or equal to the initial velocity
         # - Check that the exit velocity is less or equal to the max velocity
         # - Check that the exit velocity is greater or equal to the initial velocity
-        se = curve.discretePhases[0].si
-        ve = curve.discretePhases[0].vi
-        ae = curve.discretePhases[0].ai
+        se = curve.discreteSegments[0].si
+        ve = curve.discreteSegments[0].vi
+        ae = curve.discreteSegments[0].ai
 
-        for phase in curve.discretePhases:
-            si = phase.si
-            vi = phase.vi
+        for segment in curve.discreteSegments:
+            si = segment.si
+            vi = segment.vi
 
-            if (phase.id != 4):
-                ai = phase.ai
+            if (segment.id != 4):
+                ai = segment.ai
 
-            self.assertAlmostEqual(si, se, None, "s bound check failded in phase %d" % (phase.id), self.s_epsilon)
-            self.assertAlmostEqual(vi, ve, None, "v bound check failded in phase %d" % (phase.id), self.v_epsilon)
+            self.assertAlmostEqual(si, se, None, "s bound check failded in segment %d" % (segment.id), self.s_epsilon)
+            self.assertAlmostEqual(vi, ve, None, "v bound check failded in segment %d" % (segment.id), self.v_epsilon)
 
-            if (phase.id != 4):
-                self.assertAlmostEqual(ai, ae, None, "a bound check failded in phase %d" % (phase.id), self.a_epsilon)
+            if (segment.id != 4):
+                self.assertAlmostEqual(ai, ae, None, "a bound check failded in segment %d" % (segment.id), self.a_epsilon)
             else:
-                self.assertEqual(phase.ai, 0, "ai not zero in phase %d" % (phase.id))
-                self.assertEqual(phase.ae, 0, "ae not zero in phase %d" % (phase.id))
+                self.assertEqual(segment.ai, 0, "ai not zero in segment %d" % (segment.id))
+                self.assertEqual(segment.ae, 0, "ae not zero in segment %d" % (segment.id))
 
-            self.assertLessEqual(vi, constraints.v, "vi <= V check failded in phase %d" % (phase.id))
-            self.assertGreaterEqual(vi, constraints.v0, "vi >= v0 check failded in phase %d" % (phase.id))
-            self.assertLessEqual(ve, constraints.v, "ve <= V check failded in phase %d" % (phase.id))
-            self.assertGreaterEqual(ve, constraints.v0, "ve >= v0 check failded in phase %d" % (phase.id))
-            self.assertLessEqual(ai, constraints.a, "ai <= A check failded in phase %d" % (phase.id))
-            self.assertLessEqual(ae, constraints.a, "ae <= A check failded in phase %d" % (phase.id))
+            self.assertLessEqual(vi, constraints.v, "vi <= V check failded in segment %d" % (segment.id))
+            self.assertGreaterEqual(vi, constraints.v0, "vi >= v0 check failded in segment %d" % (segment.id))
+            self.assertLessEqual(ve, constraints.v, "ve <= V check failded in segment %d" % (segment.id))
+            self.assertGreaterEqual(ve, constraints.v0, "ve >= v0 check failded in segment %d" % (segment.id))
+            self.assertLessEqual(ai, constraints.a, "ai <= A check failded in segment %d" % (segment.id))
+            self.assertLessEqual(ae, constraints.a, "ae <= A check failded in segment %d" % (segment.id))
             
-            se = phase.se
-            ve = phase.ve
+            se = segment.se
+            ve = segment.ve
 
-            if (phase.id != 4):
-                if (phase.id == 3):
-                    ae = -phase.ae
+            if (segment.id != 4):
+                if (segment.id == 3):
+                    ae = -segment.ae
                 else:
-                    ae = phase.ae
+                    ae = segment.ae
 
     def check_discretize(self, curve: Curve):
         # - Check that the displacement between 2 consecutive steps is almost equal to beta
         #
         # - Check acceleration / deceleration:
-        #   - When in accelerating phase, deltas are growing
-        #   - When in decelererating phase, deltas are growing
+        #   - When in accelerating segment, deltas are growing
+        #   - When in decelererating segment, deltas are growing
         #   - Otherwise, deltas are constant
         step = 1
         idx = 0
 
+        s_err = 0
+        t_err = 0
+
         accelerating = False
         decelerating = False
 
-        for phase in curve.discretePhases:
-            acc_s = phase.si
+        for segment in curve.discreteSegments:
+            acc_s = segment.si
             acc_t = 0
+            s0 = segment.s0
+            segment_stp = 1
 
-            accelerating = phase.id < 4
-            decelerating = phase.id > 4
+            while (step <= segment.stpe):
+                if (segment.id in [4]) and (segment.s0 > 0) and (segment_stp == 1):                    
+                    accelerating = False
+                    decelerating = True
+                elif (segment.id in [5]) and (segment.s0 > 0) and (segment_stp == 1) and (not curve.hasSegment4):
+                    accelerating = True
+                    decelerating = False
+                else:
+                    accelerating = segment.id < 4
+                    decelerating = segment.id > 4
 
-            while (step <= phase.stpe):
-                delta_s = phase.fs(acc_t + curve.deltas[idx]) - acc_s
+                delta_s = segment.fs(acc_t + curve.deltas[idx] - t_err) - acc_s + s_err
                 self.assertAlmostEqual(delta_s, curve.beta, None, "s delta check failed for step %d" % (step), self.s_epsilon)
 
                 if (idx > 0):
                     delta_diff = math.floor(curve.deltas[idx - 1] * 1000000000000) - math.floor(curve.deltas[idx] * 1000000000000)
 
-                    if (accelerating):
-                        self.assertGreaterEqual(delta_diff, 1, "accelerating phase check failed in phase %d (idx %d)" % (phase.id, idx))
-                    elif (decelerating):                        
-                        self.assertLessEqual(delta_diff, 1, "decelerating phase check failed in phase %d (idx %d)" % (phase.id, idx))
-                    else:
-                        self.assertGreaterEqual(delta_diff, 0, "constant velocity check failed in phase %d (idx %d)" % (phase.id, idx))
+                    if (segment.id == 4) and (step > 5335):
+                        print("diff %.10f, prev %.10f, curr %.10f" % (delta_diff, curve.deltas[idx - 1] * 1000000000000, curve.deltas[idx] * 1000000000000))
 
-                acc_s = step * curve.beta
-                acc_t = acc_t + curve.deltas[idx]
+                    if (accelerating):
+                        self.assertGreaterEqual(delta_diff, 1, "accelerating segment check failed in segment %d (idx %d)" % (segment.id, idx))
+                    elif (decelerating):                        
+                        self.assertLessEqual(delta_diff, 1, "decelerating segment check failed in segment %d (idx %d)" % (segment.id, idx))
+                    else:
+                        self.assertGreaterEqual(delta_diff, 0, "constant velocity check failed in segment %d (idx %d)" % (segment.id, idx))
+
+                if (s0 > 0):
+                    acc_s = segment.si + s0 + (segment_stp - 1) * curve.beta
+                else:
+                    acc_s = step * curve.beta
+
+                acc_t = acc_t + curve.deltas[idx] - t_err
+
+                s_err = 0
+                t_err = 0
 
                 step = step + 1
+                segment_stp = segment_stp + 1
                 idx = idx + 1
+
+            s_err = segment.s - (segment.fs(acc_t) - segment.si)
+            t_err = segment.t - acc_t
+
+            print("s_err %.10f, t_err %.10f" % (s_err, t_err))
 
         # Check that the deltas are symmetrical along the entire curve
         idx_a = 0
@@ -154,12 +181,14 @@ class TestCurve(unittest.TestCase):
             [8.33, 100, 500, 10000, 000.0625, 400, True],
             [8.33, 100, 500, 10000, 000.0650, 400, True],
             [8.33, 100, 500, 10000, 000.0675, 400, True],
+            [8.33, 100, 500, 10000, 000.8000, 400, True],
             [8.33, 100, 500, 10000, 001.0000, 400, True],
             [8.33, 100, 500, 10000, 001.0025, 400, True],
             [8.33, 100, 500, 10000, 001.0050, 400, True],
             [8.33, 100, 500, 10000, 010.0000, 400, True],
             [8.33, 100, 500, 10000, 010.0025, 400, True],
             [8.33, 100, 500, 10000, 010.0050, 400, True],
+            [8.33, 100, 500, 10000, 026.0000, 400, True],
             [8.33, 100, 500, 10000, 100.0000, 400, True],
             [8.33, 100, 500, 10000, 100.0025, 400, True],
             [8.33, 100, 500, 10000, 100.0050, 400, True],
